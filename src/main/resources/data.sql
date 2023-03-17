@@ -1,0 +1,4 @@
+-- INSERT INTO `tbl_BonusType` (`bonusTypeNo`, `bonusDescription`) VALUES(1, 'Annual Bonus'),(2, 'Long-term Bonus');
+-- TRUNCATE TABLE bonus;
+-- INSERT INTO bonus (bonus_id, bonus_amount,bonus_date) VALUES(2, 100,'2023-03-01');
+-- SELECT * FROM bonus;
