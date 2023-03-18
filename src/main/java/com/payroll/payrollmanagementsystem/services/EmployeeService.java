@@ -2,13 +2,10 @@ package com.payroll.payrollmanagementsystem.services;
 
 import com.payroll.payrollmanagementsystem.models.Employee;
 import com.payroll.payrollmanagementsystem.repositories.EmployeeRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +24,7 @@ public class EmployeeService {
         }
     }
 
-    public ResponseEntity<Employee> getEmployeeById(int id) {
+    public ResponseEntity<Employee> getEmployeeById(long id) {
         try {
             Employee employeeObject = getEmployeeRes(id);
             if (employeeObject != null) {
@@ -39,7 +36,7 @@ public class EmployeeService {
         }
     }
 
-    public ResponseEntity<HttpStatus> deleteEmployeeById(int id) {
+    public ResponseEntity<HttpStatus> deleteEmployeeById(long id) {
         try {
             Employee emp = getEmployeeRes(id);
 
@@ -54,7 +51,7 @@ public class EmployeeService {
 
     }
 
-    public ResponseEntity<Employee> newEmployee(Employee employee) {
+    public ResponseEntity<Employee> addEmployee(Employee employee) {
         Employee newEmployee = employeeRepository
                 .save(Employee.builder().
                         employeeFNAME(employee.getEmployeeFNAME())
@@ -66,7 +63,38 @@ public class EmployeeService {
         return new ResponseEntity<>(newEmployee, HttpStatus.OK);
     }
 
-    private Employee getEmployeeRes(int id) {
+    public ResponseEntity<HttpStatus> addNewEmployee(Employee employee) {
+        employeeRepository.addNewEmployee(employee.getEmployeeFNAME(),
+                employee.getEmployeeONAME(),
+                employee.getEmployeeDOB(),
+                employee.getEmployeeHDATE(),
+                employee.getEmployeeRANK());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<HttpStatus> updateEmployee(Employee employee) {
+        try {
+            Employee emp = getEmployeeRes(employee.getEmployeeNO());
+
+            if (emp != null) {
+                employeeRepository.updateEmployee(employee.getEmployeeNO(),
+                        employee.getEmployeeFNAME(),
+                        employee.getEmployeeONAME(),
+                        employee.getEmployeeDOB(),
+                        employee.getEmployeeHDATE(),
+                        employee.getEmployeeRANK());
+                System.out.println("Employee with ID:" + employee.getEmployeeNO() + "was updated successfully");
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            System.out.println("Employee with ID:" + employee.getEmployeeNO() + "was not found so can not be updated");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    private Employee getEmployeeRes(long id) {
         Optional<Employee> empObject = Optional.of(employeeRepository.getEmployeeById(id));
 
         return empObject.orElse(null);

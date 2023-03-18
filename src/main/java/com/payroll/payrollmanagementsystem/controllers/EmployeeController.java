@@ -23,13 +23,21 @@ public class EmployeeController {
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") int id){
        return employeeService.getEmployeeById(id);
     }
-    @DeleteMapping("/employee/{id}")
+    @DeleteMapping("/employee/delete/{id}")
     public ResponseEntity<HttpStatus> deleteEmployeeById(@PathVariable("id") int id){
         System.out.println("id"+ id);
        return employeeService.deleteEmployeeById(id);
     }
     @PostMapping("/employee")
     public ResponseEntity<Employee> newEmployee(@RequestBody Employee employee){
-       return employeeService.newEmployee(employee);
+       return employeeService.addEmployee(employee);
+    }
+    @PostMapping("/empS")
+    public ResponseEntity<HttpStatus> addNewEmployee(@RequestBody Employee employee) {
+        return employeeService.addNewEmployee(employee);
+    }
+    @PutMapping("/employee/update")
+    public ResponseEntity<HttpStatus> updateEmployee(@RequestBody Employee employee){
+        return employeeService.updateEmployee(employee);
     }
 }
